@@ -30,9 +30,9 @@ plt.show()
 # Distribution des features clés
 for col in ['mean radius', 'mean texture', 'mean perimeter', 'mean area']:
     plt.figure(figsize=(6, 4))
-    sns.histplot(df[col], kde=True, hue=df['target'], palette='Set1')
+    sns.histplot(data=df, x=col, hue='target', palette='Set1', kde=True)
     plt.title(f"Distribution : {col}")
-    plt.show()   
+    plt.show()    
     
     
     
