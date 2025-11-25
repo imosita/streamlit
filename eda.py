@@ -15,9 +15,23 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-sns.set_theme(style='whitegrid')
+sns.set_theme(style='white')
 
 st.set_page_config(page_title='Live Corp - Explorateur Data & Modèles', page_icon='🧪', layout='wide')
+
+st.markdown("""
+<style>
+html, body, [class*="css"]  {
+    background-color: #f4f8fb !important;
+    color: #1d2a44;
+}
+.sidebar .sidebar-content {
+    background-color: #eaf4f6 !important;
+}
+section.main > div { background: transparent; }
+.stMetric label { color: #3a6073; }
+</style>
+""", unsafe_allow_html=True)
 
 @st.cache_data
 def load_data():
@@ -73,7 +87,7 @@ st.caption("Analyse exploratoire du dataset Cancer du Sein & entraînement de mo
 # Sidebar controls
 st.sidebar.header('⚙️ Paramétrage')
 feature_count = st.sidebar.slider('Nombre de features importantes', min_value=5, max_value=20, value=10, step=1)
-sns_color = st.sidebar.color_picker('Couleur des graphiques', value='#0b3d91')
+sns_color = st.sidebar.color_picker('Couleur des graphiques', value='#1BA3A1')
 
 st.sidebar.markdown('---')
 st.sidebar.markdown('**Mode d\'emploi**')
@@ -113,7 +127,7 @@ with st.expander('🔗 Corrélations', expanded=False):
     corr_matrix = df[selected_features].corr().abs()
     mask = np.triu(np.ones_like(corr_matrix, dtype=bool))
     fig, ax = plt.subplots(figsize=(10, 7))
-    sns.heatmap(corr_matrix, mask=mask, cmap='coolwarm', center=0, ax=ax, linewidths=0.5)
+    sns.heatmap(corr_matrix, mask=mask, cmap='BuGn', center=0, ax=ax, linewidths=0.5)
     ax.set_title('Matrice de corrélation (features sélectionnées)')
     st.pyplot(fig)
 
@@ -122,7 +136,7 @@ with st.expander('📈 Distributions', expanded=False):
     options = st.multiselect('Choisir les features à visualiser', selected_features, default=selected_features[:3])
     for feat in options:
         fig, ax = plt.subplots(figsize=(6, 4))
-        sns.kdeplot(data=df, x=feat, hue='target', fill=True, palette=['#c0392b', sns_color], ax=ax)
+        sns.kdeplot(data=df, x=feat, hue='target', fill=True, palette=['#ff8a80', sns_color], ax=ax)
         ax.set_title(f'Distribution : {feat}')
         st.pyplot(fig)
 
@@ -140,7 +154,7 @@ if st.button('Lancer l\'entraînement', use_container_width=True):
     st.success(f'Meilleur modèle : {best_name} ({performances[best_name]:.2%})')
 
     fig, ax = plt.subplots(figsize=(5, 4))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax,
+    sns.heatmap(cm, annot=True, fmt='d', cmap='YlGnBu', ax=ax,
                 xticklabels=['Maligne', 'Bénigne'], yticklabels=['Maligne', 'Bénigne'])
     ax.set_ylabel('Vraie classe')
     ax.set_xlabel('Classe prédite')
