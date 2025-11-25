@@ -191,12 +191,27 @@ if view == "Diagnostic IA":
             st.markdown(f"**Features utilisées** : {len(selected_indices)}")
             st.markdown(f"**Jeu d'entraînement original** : {raw_data.data.shape[0]} échantillons")
 
+            feature_labels = [humanize(feature_names[idx]) for idx in selected_indices]
             summary_df = pd.DataFrame(
                 raw_data.data[:, selected_indices],
-                columns=[humanize(feature_names[idx]) for idx in selected_indices],
+                columns=feature_labels,
             )
             st.markdown("**Statistiques principales (features retenues)**")
             st.dataframe(summary_df.describe().T[["min", "25%", "50%", "75%", "max"]])
+            class_stats = (
+                summary_df.assign(Classe=np.where(raw_data.target == 1, "Bénigne", "Maligne"))
+                .groupby("Classe")
+                .mean()
+                .reindex(["Maligne", "Bénigne"])
+            )
+            threshold_df = pd.DataFrame({
+                "Maligne": class_stats.loc["Maligne"],
+                "Bénigne": class_stats.loc["Bénigne"],
+                "Delta (Bénigne - Maligne)": class_stats.loc["Bénigne"] - class_stats.loc["Maligne"],
+            }).round(2)
+            st.markdown("**Repères moyens par classe**")
+            st.dataframe(threshold_df)
+            st.caption("Delta positif : valeur moyenne plus élevée chez les cas bénins.")
             st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("---")
