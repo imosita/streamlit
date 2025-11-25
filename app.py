@@ -78,21 +78,22 @@ feature_names = raw_data.feature_names
 
 st.set_page_config(page_title="Live Corp - Diagnostic & Exploration", page_icon="🩺", layout="wide")
 
-# Simple professional CSS
 st.markdown(
     """
     <style>
-    .main { background-color: #f7fbfc; color: #243746; font-family: 'Inter', sans-serif; }
-    h1 { color: #0b3d91; text-align: center; }
-    .stButton>button { background-color: #0b3d91; color: #fff; border-radius: 8px; border: none; }
-    .stButton>button:hover { background-color: #0a3377; }
-    .card { padding: 16px; border-radius: 12px; background: #ffffff; box-shadow: 0 1px 3px rgba(16,24,40,0.08); }
+    html, body, [class*="css"] { background-color: #f4f8fb !important; color: #1d2a44; font-family: 'Inter', sans-serif; }
+    .sidebar .sidebar-content { background-color: #eaf4f6 !important; }
+    h1 { color: #0c3565; text-align: center; }
+    .stButton>button { background-color: #1ba3a1; color: #fff; border-radius: 10px; border: none; padding: 0.6rem 1.2rem; }
+    .stButton>button:hover { background-color: #158a88; }
+    .card { padding: 16px; border-radius: 14px; background: #ffffff; box-shadow: 0 10px 30px rgba(15, 52, 96, 0.08); border: 1px solid #d4e7ed; }
+    .stMetric label { color: #357190; }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-sns.set_theme(style="whitegrid")
+sns.set_theme(style="white")
 
 st.sidebar.title("Live Corp")
 view = st.sidebar.radio("Navigation", ["Diagnostic IA", "Exploration Data"])
@@ -207,7 +208,7 @@ if view == "Diagnostic IA":
 else:
     st.sidebar.subheader("Paramétrage EDA")
     feature_count = st.sidebar.slider("Nombre de features importantes", min_value=5, max_value=20, value=10, step=1)
-    sns_color = st.sidebar.color_picker("Couleur des graphiques", value="#0b3d91")
+    sns_color = st.sidebar.color_picker("Couleur des graphiques", value="#1BA3A1")
 
     st.sidebar.markdown("---")
     st.sidebar.markdown("**Mode d'emploi**")
@@ -264,7 +265,7 @@ else:
         if options:
             for feat in options:
                 fig, ax = plt.subplots(figsize=(6, 4))
-                sns.kdeplot(data=df, x=feat, hue="target", fill=True, palette=["#c0392b", sns_color], ax=ax)
+                sns.kdeplot(data=df, x=feat, hue="target", fill=True, palette=["#ff8a80", sns_color], ax=ax)
                 ax.set_title(f"Distribution : {feat}")
                 st.pyplot(fig)
         else:
@@ -291,7 +292,7 @@ else:
             cm,
             annot=True,
             fmt="d",
-            cmap="Blues",
+            cmap="YlGnBu",
             ax=ax,
             xticklabels=["Maligne", "Bénigne"],
             yticklabels=["Maligne", "Bénigne"],
